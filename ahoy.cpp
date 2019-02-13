@@ -45,13 +45,23 @@ void prop(int id, int l, int r) {
 			st[id] = r - l + 1 - st[id];
 		}
 		if (l != r) {
+			if (lazy[left(id)].second != -1) prop(left(id), l, avg(l, r));
+			if (lazy[right(id)].second!= -1) prop(right(id), avg(l, r) + 1, r);
 			lazy[left(id)] = lazy[id];
 			lazy[right(id)] = lazy[id];
 		}
 		lazy[id] = {0, -1};
 	}
 }
-
+/*@*/
+// void propAll(int id, int l, int r) {
+// 	prop(id, l, r);
+// 	if (l == r) return;
+// 	int mid = avg(l, r);
+// 	propAll(left(id), l, mid);
+// 	propAll(right(id), mid + 1, r);
+// }
+/*@*/
 int query(int id, int a, int b, int l, int r) {
 	prop(id, l, r);
 	if (a > r or b < l) return 0;
@@ -74,16 +84,42 @@ void update(int id, int a, int b, int l, int r, int val) {
 		st[id] = st[id << 1] + st[id << 1 | 1];
 	}
 }
-
+/*@*/
+// string buffer;
+// void printBase(int id, int l, int r ) {
+// 	if (l == r) {
+// 		buffer[l] = st[id] + '0';
+// 	}
+// 	else {
+// 		int mid = avg(l, r);
+// 		printBase(left(id), l, mid);
+// 		printBase(right(id), mid + 1, r);
+// 	}
+// }
+// void print() {
+// 	buffer.clear();
+// 	buffer.resize(size, '-');
+// 	propAll(1, 0, size - 1);
+// 	printBase(1, 0, size - 1);
+// 	cout << buffer << endl;
+// }
+/*@*/
 int main() {
 	ios_base::sync_with_stdio(false);
 
-	int t;
+	int t, cs = 1;
 	cin >> t;
 	loop(t) {
-		string s;
-		cin >> s;
-
+		string s = "", y;
+		int m;
+		cin >> m;
+		loop(m) {
+			int q;
+			cin >> q >> y;
+			loop(q) {
+				s += y;
+			}
+		}
 		size = s.size();
 		st.clear(), st.resize(4 * size + 10);
 		lazy.clear(), lazy.resize(4 * size + 10, {0, -1});
@@ -92,11 +128,18 @@ int main() {
 		int q, a, b;
 		char c;
 		cin >> q;
+		cout << "Case " << cs++ << ":" << endl;
+		int qu = 1;
 		loop(q) {
 			cin >> c >> a >> b;
 			if (c == 'S') {
+				cout << "Q" << qu++ << ": ";
 				cout << query(1, a, b, 0, size - 1) << endl;
 			}
+			// else if (c == 'P') {
+			// 	propAll(1, 0, size - 1);
+			// 	print();
+			// }
 			else {
 				update(1, a, b, 0, size - 1, (c == 'F' ? 1 : (c == 'E' ? 0 : -1)));
 			}
