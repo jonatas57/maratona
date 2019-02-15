@@ -19,23 +19,56 @@ typedef pair<int, int>     ii;
 #define left(x)            x << 1
 #define right(x)           x << 1 | 1
 
-#define T                  1000
-#define SIZE               4 * T + 10
+#define N                  1024000
+#define SIZE               4 * N + 10
 
 int st[SIZE] = {0}, lazy[SIZE];
 
-void build(string& v, int id, int l, int r) {
+struct pirates {
+	int qtd, qs[101], t[101];
+	vector<string> str;
+	pirates() : qtd(1) {
+		t[0] = 0;
+		qs[0] = 0;
+		str.pb("");
+	}
+	void insert(int q, char y[51]) {
+		if (q > 0) {
+			str.push_back(y);
+			t[qtd] = t[qtd - 1] + q * (qs[qtd] = str[qtd].length());
+			qtd++;
+		}
+	}
+	int size() { return t[qtd-1];}
+	char getChar(int x) {
+		int j = binSearch(1, qtd - 1, x);
+		int aux = (x - t[j - 1]) % qs[j];
+		return str[j][aux];
+	}
+	int binSearch(int l, int r, int val) {
+		int mid = avg(l, r);
+		if (l == r || (val < t[mid] && val >= t[mid - 1])) return mid;
+		if (val >= t[mid]) return binSearch(mid + 1, r, val);
+		return binSearch(l, mid, val);
+	}
+	void print() {
+		loop(qtd) {
+			printf("%3d %s\n", t[i], str[i].data());
+		}
+	}
+};
+
+void build(pirates& p, int id, int l, int r) {
 	if (l == r) {
-		st[id] = v[l] - '0';
+		st[id] = p.getChar(l) - '0';
 	}
 	else {
 		int mid = avg(l, r);
-		build(v, left(id), l, mid);
-		build(v, right(id), mid + 1, r);
+		build(p, left(id), l, mid);
+		build(p, right(id), mid + 1, r);
 		st[id] = st[left(id)] + st[right(id)];
 	}
 }
-
 void propaux(int& x, int y) {
 	if (y == 0 || y == 1) x = y;
 	else if (y == -1) {
@@ -57,15 +90,6 @@ void prop(int id, int l, int r) {
 		lazy[id] = INF;
 	}
 }
-/*@*/
-void propAll(int id, int l, int r) {
-	prop(id, l, r);
-	if (l == r) return;
-	int mid = avg(l, r);
-	propAll(left(id), l, mid);
-	propAll(right(id), mid + 1, r);
-}
-/*@*/
 int query(int id, int a, int b, int l, int r) {
 	prop(id, l, r);
 	if (a > r or b < l) return 0;
@@ -73,7 +97,6 @@ int query(int id, int a, int b, int l, int r) {
 	int mid = avg(l, r);
 	return query(left(id), a, b, l, mid) + query(right(id), a, b, mid + 1, r);
 }
-
 void update(int id, int a, int b, int l, int r, int val) {
 	prop(id, l, r);
 	if (a > r or b < l) return;
@@ -88,112 +111,38 @@ void update(int id, int a, int b, int l, int r, int val) {
 		st[id] = st[id << 1] + st[id << 1 | 1];
 	}
 }
-/*@*/
-string buffer;
-void printBase(int id, int l, int r ) {
-	if (l == r) {
-		buffer[l] = st[id] + '0';
-	}
-	else {
-		int mid = avg(l, r);
-		printBase(left(id), l, mid);
-		printBase(right(id), mid + 1, r);
-	}
-}
-void print() {
-	buffer.clear();
-	buffer.resize(SIZE, '-');
-	propAll(1, 0, SIZE - 1);
-	printBase(1, 0, SIZE - 1);
-	cout << buffer << endl;
-}
-/*@*/
-
-struct pirates {
-	vector<char*> pir;
-	vector<int> x;
-	int qtd;
-
-	pirates() : qtd(0) {x.pb(0);}
-	void insert(int n, char* s) {
-		cout << __LINE__ << endl;
-		pir.pb(s);
-		cout << __LINE__ << endl;
-		x.pb(x[++qtd] + n * sizeof(s) / sizeof(char));
-		cout << __LINE__ << endl;
-	}
-	int getChar(int i) {
-		cout << __LINE__ << endl;
-		int j = binSearch(1, qtd, i);
-		cout << j << endl;
-		cout << __LINE__ << endl;
-		int aux = j;
-		cout << __LINE__ << endl;
-		return pir[j][aux] - '0';
-	}
-	int binSearch(int l, int r, int val) {
-		cout << __LINE__ << endl;
-		if (l == r) return l;
-		cout << __LINE__ << endl;
-		int mid = avg(l, r);
-		cout << __LINE__ << endl;
-		if (val >= x[mid - 1] && val < x[mid]) {
-			cout << __LINE__ << endl;
-			return mid;
-		}
-		else if (val < x[mid - 1]) {
-			cout << __LINE__ << endl;
-			return binSearch(l, mid, val);
-		}
-		else return binSearch(mid + 1, r, val);
-	}
-};
 
 int main() {
-	pirates p;
-	// int t, cs = 1;
-	// scanf("%d", &t);
-	// loop(t) {
-		// string s = "";
-		char *y;
-		int m;
-		scanf("%d\n", &m);
-		loop(m) {
-			int q;
-			scanf("%d\n", &q);
-			scanf("%s\n", &y);
-			// loop(q) {
-			// 	s += string(y);
-			// }
+	ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+	int t;
+	scanf("%d", &t);
+	loop(t) {
+		int m, q;
+		pirates p;
+		char y[51];
+		scanf("%d", &m);
+		loop(m) {;
+			scanf("%d\n%s\n", &q, y);
 			p.insert(q, y);
 		}
-		while(cin >> m) {
-			cout << p.getChar(m) << endl;
+		int size = p.size() - 1;
+		memset(lazy, INF, SIZE);
+		build(p, 1, 0, size);
+		int o, a, b;
+		printf("Case %d:\n", i + 1);
+		scanf("%d\n", &o);
+		char ch;
+		int qu = 1;
+		loop(o) {
+			scanf("%c %d %d\n", &ch, &a, &b);
+			if (ch == 'S') {
+				printf("Q%d: %d\n", qu++, query(1, a, b, 0, size));
+			}
+			else {
+				update(1, a, b, 0, size, (ch == 'F' ? 1 : (ch == 'E' ? 0 : -1)));
+			}
 		}
-	// 	int size = s.size();
-	// 	memset(st, 0, sizeof(st));
-	// 	memset(lazy, INF, sizeof(lazy));
-	// 	build(s, 1, 0, size - 1);
-	//
-	// 	int q, a, b;
-	// 	char c;
-	// 	scanf("%d", &q);
-	// 	printf("Case %d:\n", cs++);
-	// 	int qu = 1;
-	// 	loop(q) {
-	// 		scanf("\n%c %d %d", &c, &a, &b);
-	// 		if (c == 'S') {
-	// 			printf("Q%d: ", qu++);
-	// 			printf("%d\n", query(1, a, b, 0, size - 1));
-	// 		}/*@*/
-	// 		else if (c == 'P') {
-	// 			propAll(1, 0, SIZE - 1);
-	// 			print();
-	// 		}/*@*/
-	// 		else {
-	// 			update(1, a, b, 0, size - 1, (c == 'F' ? 1 : (c == 'E' ? 0 : -1)));
-	// 		}
-	// 	}
-	// }
+	}
+	cerr <<__LINE__ << endl;
 	return 0;
 }
