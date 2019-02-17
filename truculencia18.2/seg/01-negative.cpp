@@ -34,7 +34,6 @@ int query(int id, int l, int r, int ql, int qr) {
 	if (l >= ql and r <= qr) return st[id];
 	int mid = avg(l, r);
 	return min(query(id << 1, l, mid, ql, qr), query(id << 1 | 1, mid + 1, r, ql, qr));
-			
 }
 
 int main() {
@@ -51,7 +50,7 @@ int main() {
 			cin >> x[i];
 		}
 		build(x, 1, 0, n - 1);
-		cout << "Scenario #" << i + 1 << endl;
+		cout << "Scenario #" << i + 1 << ":" << endl;
 		loop(q) {
 			int a, b;
 			cin >> a >> b;
