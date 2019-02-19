@@ -22,7 +22,12 @@ typedef vector<bool>       vb;
 #define N                  1024000
 #define SIZE               4 * N + 10
 
-int st[SIZE] = {0}, lazy[SIZE];
+#define ZERO               2
+#define ONE                3
+#define INV                1
+#define NOT                0
+
+int st[SIZE], lazy[SIZE];
 
 void build(string& s, int id, int l, int r) {
 	if (l == r) {
@@ -34,26 +39,26 @@ void build(string& s, int id, int l, int r) {
 		build(s, right(id), mid + 1, r);
 		st[id] = st[left(id)] + st[right(id)];
 	}
+	lazy[id] = NOT;
 }
 void propaux(int& x, int y) {
-	if (y == 0 || y == 1) x = y;
-	else if (y == -1) {
-		if (x == INF) x = y;
-		else if (x == -1) x = INF;
+	if (y == ZERO || y == ONE) x = y;
+	else if (y == INV) {
+		if (x == NOT) x = y;
 		else x ^= 1;
 	}
 }
 void prop(int id, int l, int r) {
-	if (lazy[id] <= 1) {
-		if (lazy[id] == 1)      st[id] = r - l + 1;
-		else if (lazy[id] == 0) st[id] = 0;
+	if (lazy[id] != NOT) {
+		if (lazy[id] == ONE)      st[id] = r - l + 1;
+		else if (lazy[id] == ZERO) st[id] = 0;
 		else                    st[id] = r - l + 1 - st[id];
 
 		if (l != r) {
 			propaux(lazy[left(id)], lazy[id]);
 			propaux(lazy[right(id)], lazy[id]);
 		}
-		lazy[id] = INF;
+		lazy[id] = NOT;
 	}
 }
 int query(int id, int a, int b, int l, int r) {
@@ -107,7 +112,7 @@ int main() {
 				printf("Q%d: %d\n", qu++, query(1, a, b, 0, size));
 			}
 			else {
-				update(1, a, b, 0, size, (ch == 'F' ? 1 : (ch == 'E' ? 0 : -1)));
+				update(1, a, b, 0, size, (ch == 'F' ? ONE : (ch == 'E' ? ZERO : INV)));
 			}
 		}
 	}
