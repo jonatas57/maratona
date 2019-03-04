@@ -1,5 +1,6 @@
 *.out
 *.txt
+*.swp
 codechef/*
 structs*
 codeforces/*
