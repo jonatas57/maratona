@@ -31,9 +31,9 @@ int main() {
 	loop(t) {
 		int a, b, c, d;
 		cin >> a >> b >> c >> d;
-		int x;
-		if (a != c and b != d) {
-			x = mdc(c - a, d - b);
+		int x = 0;
+		if (a != c or b != d) {
+			x = mdc(abs(c - a), abs(d - b));
 		}
 		x++;
 		cout << x << endl;
