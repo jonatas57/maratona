@@ -6,8 +6,11 @@
 #include <netdb.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <unistd.h>
 
 using namespace std;
+
+#define LOCALHOST   "127.0.0.1"
 
 typedef int         Socket;
 typedef sockaddr_in Address;
@@ -25,14 +28,6 @@ Socket newSocket() {
     error("New socket error");
   }
   return -1;
-}
-Address setAddress(int port) {
-  Address serv;
-  memset(&serv, 0, sizeof serv);
-  serv.sin_family = AF_INET;
-  serv.sin_addr.s_addr = inet_addr("127.0.0.1");
-  serv.sin_port = htons(port);
-  return serv;
 }
 Address setAddress(int port, string ip) {
   Address serv;
@@ -52,13 +47,14 @@ string getIP(Address& add) {
   return inet_ntoa(add.sin_addr);
 }
 
-struct server {
+class server {
   Socket sock, cli;
   Address add, cliadd;
   int port;
 
-  server(int portno) : sock(newSocket()), port(portno) {
-    add = setAddress(port);
+public:
+  server(int portno, string ip = LOCALHOST) : sock(newSocket()), port(portno) {
+    add = setAddress(port, ip);
     sock = setSocket(sock, add, port);
   }
   void waitCon() {
@@ -72,15 +68,29 @@ struct server {
       cout << "Connected to " << getIP(cliadd) << endl;
     }
   }
+	void operator<<(string& s) {
+		send(sock, s.data(), s.length(), 0);
+	}
+	string receive() {
+		char buffer[1024];
+		recv(sock, buffer, 255, 0);
+		send(sock, "", 0, 0);
+		return buffer;
+	}
+	~server() {
+		if (sock) close(sock);
+		if (cli)  close(cli);
+	}
 };
-struct client {
+class client {
   Socket sock;
   int port;
   Address srvadd;
 
-  client(int portno) : port(portno) {
+public:
+  client(int portno, string ip = LOCALHOST) : port(portno) {
     sock = newSocket();
-    srvadd = setAddress(portno);
+    srvadd = setAddress(portno, ip);
   }
   void connection() {
     if (connect(sock, (sockaddr*)&srvadd, sizeof(srvadd)) < 0) {
@@ -90,4 +100,16 @@ struct client {
       cout << "Connected to " << getIP(srvadd) << endl;
     }
   }
+	void operator<<(string& s) {
+		recv()
+		send(sock, s.data(), s.length(), 0);
+	}
+	void operator>>(string& s) {
+		char buffer[1024] = {0};
+		recv(sock, buffer, 255, 0);
+		s = buffer;
+	}
+	~client() {
+		if (sock) close(sock);
+	}
 };
