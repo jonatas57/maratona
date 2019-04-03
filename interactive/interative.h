@@ -1,5 +1,5 @@
-#include <iostream>
 #include <cstring>
+#include <iostream>
 
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -51,11 +51,13 @@ class server {
   Socket sock, cli;
   Address add, cliadd;
   int port;
+  char buffer[1024];
 
 public:
   server(int portno, string ip = LOCALHOST) : sock(newSocket()), port(portno) {
     add = setAddress(port, ip);
     sock = setSocket(sock, add, port);
+    memset(buffer, 0, sizeof buffer);
   }
   void waitCon() {
     listen(sock, 5);
@@ -68,15 +70,13 @@ public:
       cout << "Connected to " << getIP(cliadd) << endl;
     }
   }
-	void operator<<(string& s) {
-		send(sock, s.data(), s.length(), 0);
-	}
-	string receive() {
-		char buffer[1024];
-		recv(sock, buffer, 255, 0);
-		send(sock, "", 0, 0);
-		return buffer;
-	}
+  string receive() {
+    while (!read(cli, buffer, sizeof buffer));
+    return buffer;
+  }
+  void sendmsg(string s) {
+    send(cli, s.data(), s.length() + 1, 0);
+  }
 	~server() {
 		if (sock) close(sock);
 		if (cli)  close(cli);
@@ -86,6 +86,7 @@ class client {
   Socket sock;
   int port;
   Address srvadd;
+  char buffer[1024];
 
 public:
   client(int portno, string ip = LOCALHOST) : port(portno) {
@@ -100,15 +101,13 @@ public:
       cout << "Connected to " << getIP(srvadd) << endl;
     }
   }
-	void operator<<(string& s) {
-		recv()
-		send(sock, s.data(), s.length(), 0);
-	}
-	void operator>>(string& s) {
-		char buffer[1024] = {0};
-		recv(sock, buffer, 255, 0);
-		s = buffer;
-	}
+  string receive() {
+    while (!read(sock, buffer, sizeof buffer));
+    return buffer;
+  }
+  void sendmsg(string s) {
+    send(sock, s.data(), s.length() + 1, 0);
+  }
 	~client() {
 		if (sock) close(sock);
 	}
