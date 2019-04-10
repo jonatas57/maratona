@@ -62,20 +62,22 @@ public:
   void waitCon() {
     listen(sock, 5);
     socklen_t clilen = sizeof(cliadd);
-    cout << "waiting..." << endl;
+    //cout << "waiting..." << endl;
     if ((cli = accept(sock, (sockaddr*)&cliadd, &clilen)) < 0) {
       error("waitCon/accept");
     }
     else {
-      cout << "Connected to " << getIP(cliadd) << endl;
+      //cout << "Connected to " << getIP(cliadd) << endl;
     }
   }
-  string receive() {
-    while (!read(cli, buffer, sizeof buffer));
-    return buffer;
+  server& operator>>(string& s) {
+  	read(cli, buffer, sizeof buffer);
+		s = buffer;
+    return *this;
   }
-  void sendmsg(string s) {
+  server& operator<<(string& s) {
     send(cli, s.data(), s.length() + 1, 0);
+    return *this;
   }
 	~server() {
 		if (sock) close(sock);
@@ -91,22 +93,24 @@ class client {
 public:
   client(int portno, string ip = LOCALHOST) : port(portno) {
     sock = newSocket();
-    srvadd = setAddress(portno, ip);
+    srvadd = setAddress(port, ip);
   }
   void connection() {
     if (connect(sock, (sockaddr*)&srvadd, sizeof(srvadd)) < 0) {
       error("client connect");
     }
     else {
-      cout << "Connected to " << getIP(srvadd) << endl;
+      //cout << "Connected to " << getIP(srvadd) << endl;
     }
   }
-  string receive() {
-    while (!read(sock, buffer, sizeof buffer));
-    return buffer;
+  client& operator>>(string& s) {
+    read(sock, buffer, sizeof buffer);
+		s = buffer;
+    return *this;
   }
-  void sendmsg(string s) {
+  client& operator<<(string& s) {
     send(sock, s.data(), s.length() + 1, 0);
+    return *this;
   }
 	~client() {
 		if (sock) close(sock);
