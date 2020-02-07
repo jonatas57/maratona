@@ -20,46 +20,24 @@ typedef pair<int, int>     ii;
 #define riter(a)           a.rbegin(), a.rend()
 #define endl               "\n"
 
-struct point {
-	double x, y;
-	point(double x = 0, double y = 0) : x(x), y(y) {}
-	point operator-(point p) {
-		return point(x - p.x, y - p.y);
-	}
-	point operator+(point p) {
-		return point(x + p.x, y + p.y);
-	}
-	point operator/(double a) {
-		return point(x / a, y / a);
-	}
-};
-
-double dist(point& p, point& q) {
-	point del = p - q;
-	return sqrt(del.x * del.x + del.y * del.y);
-}
-
 int main() {
 	ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
 
-	int n;
-	while (cin >> n and n) {
-		vector<point> ps;
-		int x, y;
-		double maxd = 0;
-		point mid;
-		loop(n) {
-			cin >> x >> y;
-			ps.emplace_back(x, y);
-			mid = mid + ps[i];
+	int t;
+	cin >> t;
+	string n;
+	while (t--) {
+		cin >> n;
+		int sum = 0;
+		vi mod(3);
+		each(c, n) {
+			int x = c - '0';
+			mod[x % 3]++;
+			sum += x;
 		}
-		mid = mid / n;
-		double r;
-		cin >> r;
-		loop(n) {
-			maxd = max(maxd, dist(mid, ps[i]));
-		}
-		cout << (maxd <= r ? "The polygon can be packed in the circle." : "There is no way of packing that polygon.") << endl;
+		sum %= 3;
+		int max = min(1, mod[sum]) + mod[0] - (mod[0] and sum % 3 == 0);
+		cout << (max & 1 ? 'S' : 'T') << endl;
 	}
 	return 0;
 }
