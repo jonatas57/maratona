@@ -24,7 +24,7 @@ const ll mod = 1000000007;
 struct uf {
 	int n;
 	vi id, sz;
-	uf(int n) : n(n), id(n), sz(n, 1) {
+	uf(int n) : n(n), id(n * n), sz(n * n, 1) {
 		loop(n * n) id[i] = i;
 	}
 	int find(int x) { return x == id[x] ? x : id[x] = find(id[x]); }
