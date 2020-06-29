@@ -11,7 +11,6 @@ typedef pair<int, int>     ii;
 
 #define INF                0x3f3f3f3f
 #define INFLL              0x3f3f3f3f3f3f3f3f
-#define MOD                1000000007
 #define each(x, s)         for(auto& x : s)
 #define loop(x)	           for(int i = 0;i < x;i++)
 #define vloop(v, x)        for(int v = 0;v < x;v++)
@@ -20,15 +19,17 @@ typedef pair<int, int>     ii;
 #define riter(a)           a.rbegin(), a.rend()
 #define endl               "\n"
 
+const ll mod = 1000000007;
+
 int main() {
 	ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
 
-	int cows, car, show;
-	while (cin >> cows >> car >> show) {
-		int num = car * (cows + car - 1);
-		int den = (car + cows) * (car + cows - show - 1);
-		double ans = (double)num / den;
-		cout << fixed << setprecision(5) << ans << endl;
+	int h1, h2, m1, m2, t1, t2;
+	while (cin >> h1 >> m1 >> h2 >> m2 and h1 | m1 | h2 | m2) {
+		t1 = h1 * 60 + m1;
+		t2 = h2 * 60 + m2;
+		if (t1 > t2) t2 += 1440;
+		cout << t2 - t1 << endl;
 	}
 	return 0;
 }
