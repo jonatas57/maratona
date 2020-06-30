@@ -21,24 +21,47 @@ typedef pair<int, int>     ii;
 
 const ll mod = 1000000007;
 
+struct graph {
+	int size;
+	vector<list<int>> adj;
+	graph(int n) : size(n), adj(n) {}
+	void addEdge(int a, int b) {
+		adj[a].push_back(b);
+		adj[b].push_back(a);
+	}
+};
+
+vector<ll> vs;
+int dfs(graph& g, int u, int p = -1, int dep = 0) {
+	int ch = 0;
+	each(v, g.adj[u]) {
+		if (v != p) {
+			ch += dfs(g, v, u, dep + 1);
+		}
+	}
+	vs.push_back(dep - ch);
+	return ch + 1;
+}
+
 int main() {
 	ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
 
-	int t;
-	cin >> t;
-	loop(t) {
-		int n;
-		cin >> n;
-		vi a(n);
-		loop(n) cin >> a[i];
-		int inc = INF, dec = -1;
-		loop(n) {
-			if (inc == INF and a[i] < i) inc = i;
-			if (dec == -1 and a[n - 1 - i] < i) dec = n - 1 - i;
-		}
-		int x = inc - dec;
-		cout << (x > 1 ? "Yes" : "No") << endl;
+	int n, k;
+	cin >> n >> k;
+	graph g(n);
+	int a, b;
+	loop(n - 1) {
+		cin >> a >> b;
+		g.addEdge(a - 1, b - 1);
 	}
+	vs.clear();
+	dfs(g, 0);
+	sort(riter(vs));
+	ll ans = 0;
+	loop(k) {
+		ans += vs[i];
+	}
+	cout << ans << endl;
 	return 0;
 }
 

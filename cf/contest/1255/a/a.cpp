@@ -1,41 +1,38 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 
-typedef long long          ll;
-typedef unsigned long long ull;
-typedef vector<int>	       vi;
-typedef vector<bool>       vb;
-typedef map<int, int>      mii;
-typedef pair<int, int>     ii;
+#define pb		push_back
+#define eb		emplace_back
+#define mk		make_pair
+#define fi		first
+#define se		second
+#define cc(x)	cout << #x << " = " << x << endl
+#define ok		cout << "ok" << endl
+#define endl	'\n'
 
-#define INF                0x3f3f3f3f
-#define INFLL              0x3f3f3f3f3f3f3f3f
-#define MOD                1000000007
-#define each(x, s)         for(auto& x : s)
-#define loop(x)	           for(int i = 0;i < x;i++)
-#define vloop(v, x)        for(int v = 0;v < x;v++)
-#define avg(l, r)          l + (r - l) / 2
-#define iter(a)            a.begin(), a.end()
-#define riter(a)           a.rbegin(), a.rend()
-#define endl               "\n"
-
+typedef long long ll;
+typedef pair<int,int> ii;
+const int INF = 0x3f3f3f3f;
+const double PI = acos(-1.0);
+ 
 int main() {
-	ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+	ios_base::sync_with_stdio(false);
 
-	int t;
-	cin >> t;
-	while(t--) {
+	int tc; cin >>tc;
+	while(tc--) {
 		int a, b;
-		cin >> a >> b;
-		int del = abs(a - b);
+		cin >>a >>b;
+		int dif = abs(a-b);
 		int ans = 0;
-		ans += del / 5;
-		del %= 5;
-		ans += del / 2;
-		del %= 2;
-		ans += del;
-		cout << ans << endl;
+		ans += dif/5;
+		dif %= 5;
+		ans += dif/2;
+		dif %= 2;
+		ans += dif/1;
+		cout <<ans <<endl;
 	}
+
+
 	return 0;
 }
+

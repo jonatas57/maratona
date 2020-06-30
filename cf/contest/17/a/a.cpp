@@ -24,21 +24,26 @@ const ll mod = 1000000007;
 int main() {
 	ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
 
-	int t;
-	cin >> t;
-	loop(t) {
-		int n;
-		cin >> n;
-		vi a(n);
-		loop(n) cin >> a[i];
-		int inc = INF, dec = -1;
-		loop(n) {
-			if (inc == INF and a[i] < i) inc = i;
-			if (dec == -1 and a[n - 1 - i] < i) dec = n - 1 - i;
+	int n, k;
+	cin >> n >> k;
+	vb isprime(n + 1, true);
+	isprime[0] = isprime[1] = false;
+	vi x, primes;
+	for (int i = 2;i < n;i++) {
+		if (isprime[i]) {
+			for (int j = i + i;j <= n;j += i) isprime[j] = false;
+			if (i != 2) {
+				x.push_back(primes.back() + i + 1);
+			}
+			primes.push_back(i);
 		}
-		int x = inc - dec;
-		cout << (x > 1 ? "Yes" : "No") << endl;
 	}
+	int cnt = 0;
+	each(y, x) {
+		if (isprime[y]) cnt++;
+		if (y > n) break;
+	}
+	cout << (cnt >= k ? "YES" : "NO") << endl;
 	return 0;
 }
 

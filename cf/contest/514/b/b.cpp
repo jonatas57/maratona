@@ -21,14 +21,15 @@ typedef pair<int, int>     ii;
 
 struct frac {
 	int num, den;
-	frac(int n, int d) : num(abs(n)), den(abs(d)) {
+	bool pq;
+	frac(int n, int d, bool x) : num(abs(n)), den(abs(d)), pq(x) {
 		int m = __gcd(num, den);
 		num /= m;
 		den /= m;
 		num *= ((n < 0) ^ (d < 0) ? -1 : 1);
 	}
 	bool operator<(const frac& f) const {
-		return num * f.den < den * f.num;
+		return pq != f.pq ? pq : num * f.den < den * f.num;
 	}
 };
 
@@ -43,7 +44,7 @@ int main() {
 		cin >> p >> q;
 		p -= x;
 		q -= y;
-		s.emplace(q, p);
+		s.emplace(q * q, p * p + q * q, (p < 0) ^ (q < 0) || (p == 0) || (q == 0));
 	}
 	cout << s.size() << endl;
 	return 0;

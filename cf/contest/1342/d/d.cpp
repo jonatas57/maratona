@@ -24,20 +24,37 @@ const ll mod = 1000000007;
 int main() {
 	ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
 
-	int t;
-	cin >> t;
-	loop(t) {
-		int n;
-		cin >> n;
-		vi a(n);
-		loop(n) cin >> a[i];
-		int inc = INF, dec = -1;
-		loop(n) {
-			if (inc == INF and a[i] < i) inc = i;
-			if (dec == -1 and a[n - 1 - i] < i) dec = n - 1 - i;
+	int n, k;
+	cin >> n >> k;
+	vi m(k), c(k + 1, 0);
+	int x;
+	loop(n) cin >> x, m[x - 1]++;
+	loop(k) cin >> c[i];
+	vector<vi> ans(n);
+	vi szs(n, 0);
+	int sz = 0;
+	int j = 0;
+	for (int i = k - 1;i >= 0;i--) {
+		if (c[i] > c[i + 1]) j = 0;
+		for (;m[i];) {
+			if (j == sz) {
+				sz++;
+			}
+			if (szs[j] == c[i]) {
+				j++;
+				continue;
+			}
+			int q = min(m[i], c[i] - szs[j]);
+			vloop(aux, q) ans[j].push_back(i + 1), szs[j]++;
+			m[i] -= q;
+			if (m[i]) j++;
 		}
-		int x = inc - dec;
-		cout << (x > 1 ? "Yes" : "No") << endl;
+	}
+	cout << sz << endl;
+	loop(sz) {
+		cout << szs[i];
+		vloop(j, szs[i]) cout << " " << ans[i][j];
+		cout << endl;
 	}
 	return 0;
 }

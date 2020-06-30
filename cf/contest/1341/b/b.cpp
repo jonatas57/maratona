@@ -27,17 +27,25 @@ int main() {
 	int t;
 	cin >> t;
 	loop(t) {
-		int n;
-		cin >> n;
+		int n, k;
+		cin >> n >> k;
 		vi a(n);
 		loop(n) cin >> a[i];
-		int inc = INF, dec = -1;
-		loop(n) {
-			if (inc == INF and a[i] < i) inc = i;
-			if (dec == -1 and a[n - 1 - i] < i) dec = n - 1 - i;
+		vi ps;
+		int m = 0;
+		for (int i = 1;i < n - 1;i++) {
+			if (a[i - 1] < a[i] and a[i] > a[i + 1]) ps.push_back(i), m++;
 		}
-		int x = inc - dec;
-		cout << (x > 1 ? "Yes" : "No") << endl;
+		int ans = 0, qtd = 0, l = 1;
+		for (int i = 0, j = 0, nx = 0;j < m;i++) {
+			if (i == ps[nx]) qtd--, nx++;
+			while (j < m and ps[j] < i + k - 1) qtd++, j++;
+			if (ans < qtd) {
+				ans = qtd;
+				l = i + 1;
+			}
+		}
+		cout << ans + 1 << " " << l << endl;
 	}
 	return 0;
 }

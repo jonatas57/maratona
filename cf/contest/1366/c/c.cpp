@@ -27,17 +27,26 @@ int main() {
 	int t;
 	cin >> t;
 	loop(t) {
-		int n;
-		cin >> n;
-		vi a(n);
-		loop(n) cin >> a[i];
-		int inc = INF, dec = -1;
-		loop(n) {
-			if (inc == INF and a[i] < i) inc = i;
-			if (dec == -1 and a[n - 1 - i] < i) dec = n - 1 - i;
+		int n, m;
+		cin >> n >> m;
+		int x = (n + m - 1) / 2, sz = x + (n + m) % 2;
+		vector<mii> cnt(sz + 1);
+		loop(n) vloop(j, m) {
+			int y = i + j, z;
+			cin >> z;
+			if (y < x) cnt[y][z]++;
+			else cnt[n + m - y - 2][z]++;
 		}
-		int x = inc - dec;
-		cout << (x > 1 ? "Yes" : "No") << endl;
+		int ans = 0;
+		loop(sz) {
+			int sum = 0, mx = 0;
+			for (auto& [k, v] : cnt[i]) {
+				sum += v;
+				mx = max(mx, v);
+			}
+			ans += sum - mx;
+		}
+		cout << ans << endl;
 	}
 	return 0;
 }

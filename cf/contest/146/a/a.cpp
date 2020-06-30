@@ -10,38 +10,31 @@ typedef map<int, int>      mii;
 typedef pair<int, int>     ii;
 
 #define INF                0x3f3f3f3f
-#define MAX                100000
-#define N                  4 * MAX + 10
-#define MOD                1000000007
+#define INFLL              0x3f3f3f3f3f3f3f3f
 #define each(x, s)         for(auto& x : s)
-#define ceach(x, s)        for(auto const& x : s)
-#define rep(x, y, z)       for(int i = x;i < y;i+=z)
 #define loop(x)	           for(int i = 0;i < x;i++)
 #define vloop(v, x)        for(int v = 0;v < x;v++)
 #define avg(l, r)          l + (r - l) / 2
+#define iter(a)            a.begin(), a.end()
+#define riter(a)           a.rbegin(), a.rend()
+#define endl               "\n"
+
+const ll mod = 1000000007;
 
 int main() {
 	ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
 
-	int t;
-	cin >> t;
+	int n;
 	string s;
-	while (t--) {
-		cin >> s;
-		int l = s.length();
-		map<char, bool> ok;
-		for (int i = 0, j = 0;i < l or j < l;) {
-			if (s[i] == s[j]) j++;
-			else {
-				int x = j - i;
-				if (x & 1) ok[s[i]] = true;
-				i = j;
-			}
-		}
-		each(p, ok) {
-			if (p.second) cout << p.first;
-		}
-		cout << endl;
+	cin >> n >> s;
+	bool lucky = true;
+	int sum1 = 0, sum2 = 0;
+	for (int i = 0;i < n and lucky;i++) {
+		if (s[i] != '4' and s[i] != '7') lucky = false;
+		if (i < n / 2) sum1 += s[i] - '0';
+		else sum2 += s[i] - '0';
 	}
+	cout << (lucky and sum1 == sum2 ? "YES" : "NO") << endl;
 	return 0;
 }
+

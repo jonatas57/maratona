@@ -21,23 +21,36 @@ typedef pair<int, int>     ii;
 
 const ll mod = 1000000007;
 
+struct graph {
+	int size;
+	vector<list<int>> adj;
+	graph(int n) : size(n), adj(n) {}
+	void addEdge(int a, int b) {
+		adj[a].push_back(b);
+		adj[b].push_back(a);
+	}
+};
+
 int main() {
 	ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
 
 	int t;
 	cin >> t;
+	vector<string> win = {"Ayush", "Ashish"};
 	loop(t) {
-		int n;
-		cin >> n;
-		vi a(n);
-		loop(n) cin >> a[i];
-		int inc = INF, dec = -1;
-		loop(n) {
-			if (inc == INF and a[i] < i) inc = i;
-			if (dec == -1 and a[n - 1 - i] < i) dec = n - 1 - i;
+		int n, x;
+		cin >> n >> x;
+		graph g(n);
+		int a, b;
+		loop(n - 1) {
+			cin >> a >> b;
+			g.addEdge(a - 1, b - 1);
 		}
-		int x = inc - dec;
-		cout << (x > 1 ? "Yes" : "No") << endl;
+		x--;
+		int w;
+		if (g.adj[x].size() <= 1) w = 0;
+		else w = n & 1;
+		cout << win[w] << endl;
 	}
 	return 0;
 }

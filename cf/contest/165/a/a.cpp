@@ -21,24 +21,36 @@ typedef pair<int, int>     ii;
 
 const ll mod = 1000000007;
 
+struct point {
+	int x, y, id;
+	point(int x, int y, int id) : x(x), y(y), id(id) {}
+};
+
 int main() {
 	ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
 
-	int t;
-	cin >> t;
-	loop(t) {
-		int n;
-		cin >> n;
-		vi a(n);
-		loop(n) cin >> a[i];
-		int inc = INF, dec = -1;
-		loop(n) {
-			if (inc == INF and a[i] < i) inc = i;
-			if (dec == -1 and a[n - 1 - i] < i) dec = n - 1 - i;
-		}
-		int x = inc - dec;
-		cout << (x > 1 ? "Yes" : "No") << endl;
+	int n;
+	cin >> n;
+	vector<point> ps;
+	int x, y;
+	loop(n) {
+		cin >> x >> y;
+		ps.emplace_back(x, y, i);
 	}
+	vi a(n, 0);
+	sort(iter(ps), [](point p, point q) {
+		return p.x == q.x ? p.y < q.y : p.x < q.x;
+	});
+	for (int i = 1;i < n;i++) if (ps[i].x == ps[i - 1].x) a[ps[i].id] |= 1, a[ps[i - 1].id] |= 2;
+	sort(iter(ps), [](point p, point q) {
+		return p.y == q.y ? p.x < q.x : p.y < q.y;
+	});
+	for (int i = 1;i < n;i++) if (ps[i].y == ps[i - 1].y) a[ps[i].id] |= 4, a[ps[i - 1].id] |= 8;
+	int ans = 0;
+	each(x, a) {
+		if (x == 15) ans++;
+	}
+	cout << ans << endl;
 	return 0;
 }
 

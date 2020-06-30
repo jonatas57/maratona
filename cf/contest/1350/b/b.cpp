@@ -29,15 +29,22 @@ int main() {
 	loop(t) {
 		int n;
 		cin >> n;
-		vi a(n);
-		loop(n) cin >> a[i];
-		int inc = INF, dec = -1;
-		loop(n) {
-			if (inc == INF and a[i] < i) inc = i;
-			if (dec == -1 and a[n - 1 - i] < i) dec = n - 1 - i;
+		vi s(n);
+		loop(n) cin >> s[i];
+		vi ans(n, 1);
+		for (int i = 2;i <= n;i++) {
+			for (int j = 1;j * j <= i;j++) {
+				if (i % j == 0) {
+					int a = j - 1;
+					int b = i / j - 1;
+					if (s[a] < s[i - 1]) ans[i - 1] = max(ans[i - 1], ans[a] + 1);
+					if (s[b] < s[i - 1]) ans[i - 1] = max(ans[i - 1], ans[b] + 1);
+				}
+			}
 		}
-		int x = inc - dec;
-		cout << (x > 1 ? "Yes" : "No") << endl;
+		int x = 1;
+		loop(n) x = max(x, ans[i]);
+		cout << x << endl;
 	}
 	return 0;
 }

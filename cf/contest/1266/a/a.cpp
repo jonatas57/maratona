@@ -40,7 +40,7 @@ int main() {
 			else if (x % 2 == 0) par = true;
 			sum += x;
 		}
-		cout << (z and par and sum % 3 == 0 ? "red" : "cyan") << endl;
+		cout << (sum == 0 or (z and par and sum % 3 == 0) ? "red" : "cyan") << endl;
 	}
 	return 0;
 }

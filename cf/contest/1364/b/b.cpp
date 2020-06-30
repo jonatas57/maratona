@@ -30,14 +30,37 @@ int main() {
 		int n;
 		cin >> n;
 		vi a(n);
-		loop(n) cin >> a[i];
-		int inc = INF, dec = -1;
-		loop(n) {
-			if (inc == INF and a[i] < i) inc = i;
-			if (dec == -1 and a[n - 1 - i] < i) dec = n - 1 - i;
+		bool men = false, mai = true;
+		vi x(1), y(1);
+		cin >> x[0];
+		y[0] = x[0];
+		int z;
+		loop(n - 1) {
+			cin >> z;
+			if ((z < x.back()) ^ men) {
+				x.push_back(z);
+				men ^= 1;
+			}
+			else x.back() = z;
+			if ((z < y.back()) ^ mai) {
+				y.push_back(z);
+				mai ^= 1;
+			}
+			else y.back() = z;
 		}
-		int x = inc - dec;
-		cout << (x > 1 ? "Yes" : "No") << endl;
+		int ansx = 0, ansy = 0;
+		loop(-1 + x.size()) ansx += abs(x[i] - x[i + 1]);
+		loop(-1 + y.size()) ansy += abs(y[i] - y[i + 1]);
+		if (make_pair(-ansx, x.size()) < make_pair(-ansy, y.size())) {
+			cout << x.size() << endl;
+			each(p, x) cout << p << " ";
+			cout << endl;
+		}
+		else {
+			cout << y.size() << endl;
+			each(p, y) cout << p << " ";
+			cout << endl;
+		}
 	}
 	return 0;
 }

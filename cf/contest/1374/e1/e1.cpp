@@ -24,20 +24,44 @@ const ll mod = 1000000007;
 int main() {
 	ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
 
-	int t;
-	cin >> t;
-	loop(t) {
-		int n;
-		cin >> n;
-		vi a(n);
-		loop(n) cin >> a[i];
-		int inc = INF, dec = -1;
-		loop(n) {
-			if (inc == INF and a[i] < i) inc = i;
-			if (dec == -1 and a[n - 1 - i] < i) dec = n - 1 - i;
+	int n, k;
+	cin >> n >> k;
+	vi a, b, ab;
+	int t, x, y;
+	loop(n) {
+		cin >> t >> x >> y;
+		if (x and y) ab.push_back(t);
+		else if (x) a.push_back(t);
+		else if (y) b.push_back(t);
+	}
+	sort(iter(ab)), sort(iter(a)), sort(iter(b));
+	int i = 0, j = 0, l = 0;
+	int sum = 0;
+	each(t, ab) {
+		if (i == k) break;
+		i++;
+		sum += t;
+	}
+	each(t, a) {
+		if (i + j == k) break;
+		j++;
+		sum += t;
+	}
+	each(t, b) {
+		if (i + l == k) break;
+		l++;
+		sum += t;
+	}
+	if (i + j != k or i + l != k) cout << -1 << endl;
+	else {
+		int sza = a.size(), szb = b.size();
+		while (i > 0 and j < sza and l < szb and ab[i - 1] > a[j] + b[l]) {
+			sum += a[j] + b[l] - ab[i - 1];
+			i--;
+			j++;
+			l++;
 		}
-		int x = inc - dec;
-		cout << (x > 1 ? "Yes" : "No") << endl;
+		cout << sum << endl;
 	}
 	return 0;
 }
