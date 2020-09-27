@@ -2,9 +2,10 @@
 *.txt
 *.swp
 *.py
+*.cppx
 structs*
-codeforces/*
 uri/*
+lib/*
 
 
 in*
