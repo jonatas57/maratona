@@ -3,9 +3,9 @@
 *.swp
 *.py
 *.cppx
+*.in
 structs*
 uri/*
-lib/*
 
 
 in*
